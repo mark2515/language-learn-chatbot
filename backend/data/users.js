@@ -5,7 +5,7 @@ const users = [
         email: 'admin@example.com'
     },
     {
-        _id: '1',
+        _id: '2',
         name: 'lucy',
         email: 'lucy@example.com'
     },
