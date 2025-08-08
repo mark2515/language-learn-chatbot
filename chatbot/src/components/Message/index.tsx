@@ -64,12 +64,22 @@ export const Message = ({ sessionId }: Props) => {
     setMessage(msg);
     chatStorage.updateMessage(sessionId, msg);
   };
-  chatService.actions = {
-    onCompleting: (sug) => setSuggestion(sug),
-    onCompleted: () => {
-      setLoading(false);
-    },
-  };
+
+  useEffect(() => {
+    chatService.actions = {
+      onCompleting: (partial) => {
+        setSuggestion(partial);
+      },
+      onCompleted: async (finalText) => {
+        setLoading(false);
+        if (!finalText) return;
+        await saveMessageToDB("assistant", finalText);
+      },
+    };
+    return () => {
+      chatService.actions = undefined;
+    };
+  }, [currentUser]);
 
   useEffect(() => {
     const session = chatStorage.getSession(sessionId);
